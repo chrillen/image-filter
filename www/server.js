@@ -1,9 +1,10 @@
 "use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
         function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
@@ -16,7 +17,7 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const fs_1 = __importDefault(require("fs"));
 const mime_types_1 = __importDefault(require("mime-types"));
 const util_1 = require("./util/util");
-(() => __awaiter(this, void 0, void 0, function* () {
+(() => __awaiter(void 0, void 0, void 0, function* () {
     // Init the Express application
     const app = express_1.default();
     // Set the network port
@@ -25,7 +26,7 @@ const util_1 = require("./util/util");
     app.use(body_parser_1.default.json());
     // filteredimage Endpoint
     // returns a filterimage
-    app.get("/filteredimage/", (req, res) => __awaiter(this, void 0, void 0, function* () {
+    app.get("/filteredimage/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { image_url } = req.query;
         // validate the image_url from req param.
         if (!image_url) {
@@ -49,7 +50,7 @@ const util_1 = require("./util/util");
     }));
     // Root Endpoint
     // Displays a simple message to the user
-    app.get("/", (req, res) => __awaiter(this, void 0, void 0, function* () {
+    app.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.send("try GET /filteredimage?image_url={{}}");
     }));
     // Start the Server
