@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import fs from 'fs';
 import mimetypes from 'mime-types';
 import {filterImageFromURL, deleteLocalFiles, isValidUrl} from './util/util';
+import { doesNotReject } from 'assert';
 
 (async () => {
 
@@ -20,7 +21,7 @@ import {filterImageFromURL, deleteLocalFiles, isValidUrl} from './util/util';
   app.get( "/filteredimage/", async ( req , res ) => {
     const { image_url } = req.query;
 
-    // validate the image_url from req param.
+    // validate the image_url from req query.
     if (!image_url) {
         return res.status(400).send({ message: 'image_url is required' });
     }
@@ -31,11 +32,18 @@ import {filterImageFromURL, deleteLocalFiles, isValidUrl} from './util/util';
     }
 
     //Get filter image.
-    const filterImagePath = await filterImageFromURL(image_url);
-    
+    const filterImagePath = await filterImageFromURL(image_url).catch(() => 
+    { 
+       return res.status(422).send({ message: '1111111111 unable to process image' });
+    })
+
+    if(!(typeof filterImagePath === 'string')) {
+      return res.status(422).send({ message: 'unable to process image' });
+    }
+
     //Parse the image extension for the correct header.
     const fileNameSplited =  filterImagePath.split('.');
-    let fileNamExtension =  fileNameSplited[fileNameSplited.length-1];
+    const fileNamExtension =  fileNameSplited[fileNameSplited.length-1];
     
     //Set header and send the filecontent
     const mime = mimetypes.lookup(fileNamExtension);
