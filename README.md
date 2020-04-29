@@ -5,7 +5,8 @@ udacity assignment for module 2
 
 ###### url: http://imagefilter-chrille-dev.us-east-1.elasticbeanstalk.com/
 
-###### token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNocmlsbGVuQGdtYWlsLmNvbSIsImlhdCI6MTU4ODA4OTEzOCwiZXhwIjoxNjE5NjI1MTM4fQ.pZAML8M_eKn8nMxkHB0flcV3d8Vtz2uO52idpnza8oY
+###### token:
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNocmlsbGVuQGdtYWlsLmNvbSIsImlhdCI6MTU4ODA4OTEzOCwiZXhwIjoxNjE5NjI1MTM4fQ.pZAML8M_eKn8nMxkHB0flcV3d8Vtz2uO52idpnza8oY
 
 ###### Image of deployment in AWS:
 ![image of deployment](https://github.com/chrillen/image-filter/blob/master/deployment_screenshots/imagefilter-deployed-elastic-beanstalk.png)
