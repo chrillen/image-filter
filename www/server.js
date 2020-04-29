@@ -15,6 +15,7 @@ const express_1 = __importDefault(require("express"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const fs_1 = __importDefault(require("fs"));
 const mime_types_1 = __importDefault(require("mime-types"));
+const js_base64_1 = require("js-base64");
 const util_1 = require("./util/util");
 (() => __awaiter(this, void 0, void 0, function* () {
     // Init the Express application
@@ -25,20 +26,27 @@ const util_1 = require("./util/util");
     app.use(body_parser_1.default.json());
     // filteredimage Endpoint
     // returns a filterimage
-    app.get("/filteredimage/", (req, res) => __awaiter(this, void 0, void 0, function* () {
-        const { image_url } = req.query;
+    app.get('/filteredimage/', util_1.requireAuth, (req, res) => __awaiter(this, void 0, void 0, function* () {
+        //Get the image_url from the query parameter.
+        let { image_url, encoded } = req.query;
         // validate the image_url from req query.
         if (!image_url) {
             return res.status(400).send({ message: 'image_url is required' });
         }
+        //To handle inbuilt query params in aws s3 url i encode and decode to base64
+        if (encoded) {
+            image_url = js_base64_1.Base64.decode(image_url);
+        }
         //check if its a valid url aswell.
         if (!util_1.isValidUrl(image_url)) {
-            return res.status(400).send({ message: 'image_url is not a correct url' });
+            return res.status(400).send({ message: 'image_url is not a valid url' });
         }
         //Get filter image.
-        const filterImagePath = yield util_1.filterImageFromURL(image_url).catch(() => {
+        const filterImagePath = yield util_1.filterImageFromURL(image_url).catch((err) => {
+            console.log(err);
             return res.status(422).send({ message: 'unable to process image' });
         });
+        //Extra validation    
         if (!(typeof filterImagePath === 'string')) {
             return res.status(422).send({ message: 'unable to process image' });
         }

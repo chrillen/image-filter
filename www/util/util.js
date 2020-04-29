@@ -10,9 +10,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = __importDefault(require("fs"));
 const Jimp = require("jimp");
+const jwt = __importStar(require("jsonwebtoken"));
+const config_1 = require("../config/config");
 // filterImageFromURL
 // helper function to download, filter, and save the filtered image locally
 // returns the absolute path to the local image
@@ -49,6 +58,24 @@ function deleteLocalFiles(files) {
     });
 }
 exports.deleteLocalFiles = deleteLocalFiles;
+// requireAuth
+// helper function validate jwt tokens in header
+// INPUTS
+//   Request: from client, Response: back to client, NextFunction: used for skip routes in express.
+function requireAuth(req, res, next) {
+    if (!req.headers || !req.headers.authorization) {
+        return res.status(401).send({ message: 'No authorization headers.' });
+    }
+    const token_bearer = req.headers.authorization.split(' ');
+    const token = token_bearer[1].split(',')[0];
+    return jwt.verify(token, config_1.config.jwt.secret, (err, decoded) => {
+        if (err) {
+            return res.status(500).send({ auth: false, message: 'Failed to authenticate.' });
+        }
+        return next();
+    });
+}
+exports.requireAuth = requireAuth;
 // isValidUrl
 // helper function to validate if input is a valid url
 // returns boolean if the url is valid
